@@ -1,0 +1,444 @@
+@import url('https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Roboto:wght@100;300;400;500;700&display=swap');
+
+
+
+*{
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body{
+    font-family: 'Arimo', sans-serif;
+	overflow: hidden;
+	/* background-image: url(/img/bg-main-02.svg);
+	background-repeat: no-repeat; */
+}
+
+.bg-top::before{
+	content: '';
+	z-index: -1;
+	background-image: url(/img/SVG/Asset\ 7.svg);
+    background-repeat: no-repeat;
+    background-size: 70% 90%;
+    position: absolute;
+    background-position: top left;
+	top: -50%;
+    left: -40%;
+	height: 100%;
+	width: 90%;
+}
+
+.bg-bottom::before{
+	content: '';
+	z-index: -1;
+	background-image: url(/img/SVG/Asset\ 10.svg);
+    background-repeat: no-repeat;
+    background-size: 70% 90%;
+    position: absolute;
+    background-position: bottom right;
+	bottom: -50%;
+    right: -40%;
+	height: 100%;
+	width: 90%;
+}
+
+.container{
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap :6rem;
+    padding: 0 2rem;
+}
+
+.img{
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.login-content{
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	text-align: center;
+}
+
+.img img{
+	width: 500px;
+}
+
+form{
+	width: 360px;
+}
+
+.login-content img{
+    height: 100px;
+}
+
+.login-content h2{
+	margin-top: 0px;
+	margin-bottom: -7px;
+	color: #333;
+	text-transform: capitalize;
+	font-size: 1.5rem;
+	font-family: "Arimo", sans-serif;
+	font-weight: 400;
+	letter-spacing: 0.05rem;
+}
+
+.login-content .input-div{
+	position: relative;
+    display: grid;
+    grid-template-columns: 7% 93%;
+    margin: 25px 0;
+    padding: 5px 0;
+	border-bottom: 2px solid #d9d9d9;
+}
+
+.login-content .input-div.one{
+	margin-top: 0;
+}
+
+.i{
+	color:  #d9d9d9;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.i-phone{
+	color: #d9d9d9;
+	margin-top: 15px;
+	display: flex;
+	align-items: left;
+	margin-left: 5px;
+}
+
+.i i{
+	transition: .3s;
+}
+
+.input-div > div{
+    position: relative;
+	height: 30px;
+}
+
+.input-div > div > h5{
+	position: absolute;
+	left: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: rgb(90, 59, 146);
+	font-size: 18px;
+	transition: .3s;
+	font-family: 'Arimo', sans-serif!important;
+	font-weight: 300;
+}
+
+.input-div:before, .input-div:after{
+	content: '';
+	position: absolute;
+	bottom: -2px;
+	width: 0%;
+	height: 2px;
+	background-color: #142d3b;
+	transition: .4s;
+	text-align: center;
+}
+
+.input-div:before{
+	right: 50%;
+}
+
+.input-div:after{
+	left: 50%;
+}
+
+.input-div.focus:before, .input-div.focus:after{
+	width: 50%;
+}
+
+.input-div.focus > div > h5{
+	top: -10px;
+	font-size: 15px;
+}
+
+.input-div.focus > .i > i{
+	color:rgb(90, 59, 146);
+}
+.input-div > div > input{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	border: none;
+	outline: none;
+	background: none;
+	padding: 0.5rem 0.7rem;
+	font-size: 1.2rem;
+	color: #555;
+	font-family: 'Arimo', sans-serif;
+}
+
+.input-div.pass{
+	margin-bottom: 4px;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	border: none;
+	outline: none;
+	background: none;
+	font-family: 'Arimo', sans-serif;
+}	
+
+.input-div-select{
+	border: none;
+}
+
+.input-div-select:focus{
+	border: none;
+	outline: none;
+}
+
+a{
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: rgb(90, 59, 146);
+	font-size: 0.9rem;
+	transition: .3s;
+}
+
+a:hover{
+	color:rgb(90, 59, 146);
+}
+
+.btn{
+	display: block;
+	width: 100%;
+	height: 50px;
+	border-radius: 25px;
+	outline: none;
+	border: none;
+	background-image: linear-gradient(to right, #251a51, #251a51, #251a51);
+	background-size: 200%;
+	font-size: 1.2rem;
+	color: #fff;
+	font-family: 'Arimo', sans-serif;
+	text-transform: uppercase;
+	margin: 2rem 0;
+	cursor: pointer;
+	transition: .5s;
+	letter-spacing: 0.14rem;
+}
+
+.btn:hover{
+	background-position: center;
+}
+
+.img-btn{
+	width: 160%;
+}
+
+select{
+	margin: 7px 15px 0px 5px;
+	max-width: 100px;
+	float: left;
+	text-transform: capitalize;
+	color:rgb(90, 59, 146);
+	font-family: 'Arimo', sans-serif;
+	margin-bottom: -25px!important;
+	border: none;
+	font-size: 1.2rem;
+	opacity: 0.9;
+}
+
+select:focus, select:active{
+	border: none;
+	border-color: #251a51;
+}
+
+select > option{
+	padding-right:20px;
+}
+
+select:before, select::after{
+	content: '';
+	position: absolute;
+	bottom: -2px;
+	width: 0%;
+	height: 2px;
+	background-color: transparent;
+	transition: .4s;
+	text-align: center;
+	color: rgb(90, 59, 146);
+}
+
+select:focus{
+	border: none;
+}
+
+.phone{
+	outline: none;
+	border: none;
+	margin-left: 1.5rem;
+	width: auto;
+}
+
+.phone-input{
+	float: right;
+}
+
+
+.phone::placeholder{
+	color: #028cdb;
+	font-family: 'Arimo', sans-serif;
+	font-weight:  250;
+	font-size: 18px;
+}
+
+.dont-have-account{
+	margin-bottom: 40px;
+}
+
+.forgot-pass{
+	padding: 1rem 0px 1rem 0px;
+}
+
+@media screen and (max-width: 1050px){
+	.container{
+		grid-gap: 5rem;
+	}
+
+	.img img{
+		width: 20px;
+	}
+}
+
+@media screen and (max-width: 768px){
+	form{
+		width: 290px;
+	}
+
+	.container{
+		grid-template-columns: 1fr;
+	}
+	.bg-top::before{
+		content: '';
+		z-index: -1;
+		background-image: url(/img/SVG/Asset\ 7.svg);
+		background-repeat: no-repeat;
+		background-size: 50% 50%;
+		position: absolute;
+		background-position: top left;
+		top: -80%;
+		left: -80%;
+		height: 50%;
+		width: 90%;
+	}
+
+	.login-content h2{
+        font-size: 1.5rem;
+		margin-top: 5px 0;
+		text-transform: capitalize;
+		font-family: "Arimo"!important ;
+
+	}
+
+	.login-content{
+		margin-bottom: 60vh;
+	}
+	
+	.img img{
+		width: 200px;
+		margin-top: 20vh;
+		margin-left: 0vw;
+		top: 200px;
+	}
+
+
+	.bg-bottom{
+		display: none;
+	}
+}
+/* @media screen and (max-width: 1024px){
+	.bg-top::before{
+		display: none;
+	}
+
+	.bg-bottom::before{
+		display: none;
+	}
+} */
+
+
+@media screen and (max-width: 600px){
+
+	/* .login-content h2{
+        font-size: 2.0rem;
+		margin-top: 5px;
+		font-family: 'Arimo'!important;
+		font-weight: 400;
+		text-transform: capitalize;
+	} */
+
+
+	body {
+		background-image: none;
+		overflow-x: hidden;
+		overflow-y: scroll ;
+	}
+	.container{
+		grid-template-columns: 1fr;
+	}
+
+	.img{
+		display: block;
+	}
+
+	.bg-top::before{
+		z-index: -1;
+		background-repeat: no-repeat;
+		background-size: 50% 90%;
+		position: absolute;
+		background-position: top left;
+		top: -40%;
+		left: -20%;
+		height: 100%;
+		width: 90%;
+	}
+
+	.img{
+		justify-content: center;
+	}
+
+	.img img{
+		width: 270px;
+		margin-top: 10vh;
+		margin-left: 5vw!important;
+		top: 200px;
+	}
+
+	form{
+		width: 320px;
+	}
+
+	.wave{
+		display: none;
+	}
+
+	.login-content{
+		justify-content: center;
+		margin-top: -60px;
+		margin-bottom: 100px;
+	}
+
+	.bg-bottom{
+		display: none;
+	}
+
+}
