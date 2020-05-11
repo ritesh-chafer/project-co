@@ -65,14 +65,14 @@ var AuthenticationController = /** @class */ (function () {
                                 case 0:
                                     if (results.length == 0) {
                                         console.log("User was not found");
-                                        return [2 /*return*/, res.status(401).json({ error: "User not found in database" })];
+                                        return [2 /*return*/, res.redirect("/loginerr")];
                                     }
                                     return [4 /*yield*/, bcrypt.compare(password, results[0].password)];
                                 case 1:
                                     compareResponse = _a.sent();
                                     if (!compareResponse) {
                                         console.log("Invalid credentials");
-                                        return [2 /*return*/, res.status(401).json({ error: "Invalid credentials" })];
+                                        return [2 /*return*/, res.redirect("/loginerr")];
                                     }
                                     _a.label = 2;
                                 case 2:
@@ -85,13 +85,9 @@ var AuthenticationController = /** @class */ (function () {
                                     return [3 /*break*/, 5];
                                 case 4:
                                     err_1 = _a.sent();
-                                    res.status(500).json({ error: "Internal Server Error" });
-                                    return [3 /*break*/, 5];
+                                    return [2 /*return*/, res.redirect("/loginerr")];
                                 case 5:
-                                    res
-                                        .cookie("token", token, { httpOnly: true })
-                                        .status(200)
-                                        .json({ success: "User logged in and token stored as a cookie." });
+                                    res.cookie("token", token, { httpOnly: true }).redirect("/register1");
                                     return [2 /*return*/];
                             }
                         });
@@ -117,7 +113,7 @@ var AuthenticationController = /** @class */ (function () {
                                     console.log(results);
                                     if (results.length != 0) {
                                         console.log("User email already exists");
-                                        return [2 /*return*/, res.status(409).json({ error: "User email already exists" })];
+                                        return [2 /*return*/, res.redirect("/signuperr")];
                                     }
                                     _a.label = 1;
                                 case 1:
@@ -129,7 +125,7 @@ var AuthenticationController = /** @class */ (function () {
                                     return [3 /*break*/, 4];
                                 case 3:
                                     err_2 = _a.sent();
-                                    return [2 /*return*/, res.status(500).json({ error: "Internal Server Error" })];
+                                    return [2 /*return*/, res.redirect("/signuperr")];
                                 case 4:
                                     activeToken = Math.floor(Math.random() * 100000);
                                     //Adding new row to the table
@@ -140,7 +136,7 @@ var AuthenticationController = /** @class */ (function () {
                                                 switch (_a.label) {
                                                     case 0:
                                                         if (error)
-                                                            return [2 /*return*/, res.status(500).json({ error: "Database query issue" })];
+                                                            return [2 /*return*/, res.redirect("/signuperr")];
                                                         transporter = nodemailer.createTransport({
                                                             host: "smtp.ethereal.email",
                                                             port: 587,

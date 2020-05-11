@@ -28,7 +28,7 @@ export class AuthenticationController {
       async function (error: Error, results: any, fields: any) {
         if (results.length == 0) {
           console.log("User was not found");
-          return res.status(401).json({ error: "User not found in database" });
+          return res.redirect("/loginerr");
         }
 
         let compareResponse: boolean = await bcrypt.compare(
@@ -38,7 +38,7 @@ export class AuthenticationController {
 
         if (!compareResponse) {
           console.log("Invalid credentials");
-          return res.status(401).json({ error: "Invalid credentials" });
+          return res.redirect("/loginerr");
         }
 
         let token;
@@ -50,13 +50,10 @@ export class AuthenticationController {
             process.env.SECRET
           );
         } catch (err) {
-          res.status(500).json({ error: "Internal Server Error" });
+          return res.redirect("/loginerr");
         }
 
-        res
-          .cookie("token", token, { httpOnly: true })
-          .status(200)
-          .json({ success: "User logged in and token stored as a cookie." });
+        res.cookie("token", token, { httpOnly: true }).redirect("/register1");
       }
     );
   };
@@ -72,10 +69,9 @@ export class AuthenticationController {
       "SELECT * FROM `userdetails` WHERE `email`=?",
       [email],
       async function (error: Error, results: any, fields: any) {
-        console.log(results);
         if (results.length != 0) {
           console.log("User email already exists");
-          return res.status(409).json({ error: "User email already exists" });
+          return res.redirect("/signuperr");
         }
 
         let hash;
@@ -83,7 +79,7 @@ export class AuthenticationController {
           //Hashing the password with 14 rounds of salting
           hash = await bcrypt.hash(password, 14);
         } catch (err) {
-          return res.status(500).json({ error: "Internal Server Error" });
+          return res.redirect("/signuperr");
         }
 
         let activeToken = Math.floor(Math.random() * 100000);
@@ -92,8 +88,7 @@ export class AuthenticationController {
           "INSERT INTO `userdetails` (name, email, country, phone, password, active) VALUES (?,?,?,?,?,?)",
           [username, email, country, phone, hash, activeToken],
           async function (error: Error, results: any, fields: any) {
-            if (error)
-              return res.status(500).json({ error: "Database query issue" });
+            if (error) return res.redirect("/signuperr");
 
             let transporter = nodemailer.createTransport({
               host: "smtp.ethereal.email",

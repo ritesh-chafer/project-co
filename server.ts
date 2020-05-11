@@ -39,8 +39,17 @@ connection.connect(function (err: Error) {
   const profileInstance = new ProfileController();
 
   //Define Primary Routes
-  app.get("/login", (req: Request, res: Response) => {
+  app.get("/", (req: Request, res: Response) => {
     res.sendFile(__dirname + "/pages/login/login.html");
+  });
+  app.get("/loginerr", (req: Request, res: Response) => {
+    res.sendFile(__dirname + "/pages/login/loginerr.html");
+  });
+  app.get("/signup", (req: Request, res: Response) => {
+    res.sendFile(__dirname + "/pages/signup/signup.html");
+  });
+  app.get("/signuperr", (req: Request, res: Response) => {
+    res.sendFile(__dirname + "/pages/signup/signuperr.html");
   });
   app.get("/register1", (req: Request, res: Response) => {
     res.sendFile(__dirname + "/pages/first.html");

@@ -31,8 +31,17 @@ exports.connection.connect(function (err) {
     var middlewareInstance = new middleware_1.MiddlewareController();
     var profileInstance = new profileController_1.ProfileController();
     //Define Primary Routes
-    app.get("/login", function (req, res) {
+    app.get("/", function (req, res) {
         res.sendFile(__dirname + "/pages/login/login.html");
+    });
+    app.get("/loginerr", function (req, res) {
+        res.sendFile(__dirname + "/pages/login/loginerr.html");
+    });
+    app.get("/signup", function (req, res) {
+        res.sendFile(__dirname + "/pages/signup/signup.html");
+    });
+    app.get("/signuperr", function (req, res) {
+        res.sendFile(__dirname + "/pages/signup/signuperr.html");
     });
     app.get("/register1", function (req, res) {
         res.sendFile(__dirname + "/pages/first.html");
