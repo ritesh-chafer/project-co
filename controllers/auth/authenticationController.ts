@@ -67,11 +67,15 @@ export class AuthenticationController {
     let phone = req.body.phone;
     let password = req.body.password;
 
+    console.log(req.body);
+
     connection.query(
       "SELECT * FROM `userdetails` WHERE `email`=?",
       [email],
       async function (error: Error, results: any, fields: any) {
         if (error) return res.redirect("/signuperr");
+
+        console.log(results);
 
         if (results.length != 0) {
           console.log("User email already exists");
