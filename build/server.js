@@ -32,6 +32,9 @@ exports.connection.connect(function (err) {
     var profileInstance = new profileController_1.ProfileController();
     //Define Primary Routes
     app.get("/", function (req, res) {
+        res.sendFile(__dirname + "/pages/files/index.html");
+    });
+    app.get("/login", function (req, res) {
         res.sendFile(__dirname + "/pages/login/login.html");
     });
     app.get("/loginerr", function (req, res) {
@@ -42,6 +45,9 @@ exports.connection.connect(function (err) {
     });
     app.get("/signuperr", function (req, res) {
         res.sendFile(__dirname + "/pages/signup/signuperr.html");
+    });
+    app.get("/signupres", function (req, res) {
+        res.sendFile(__dirname + "/pages/response.html");
     });
     app.get("/register1", function (req, res) {
         res.sendFile(__dirname + "/pages/first.html");

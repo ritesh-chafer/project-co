@@ -13,6 +13,7 @@ export class AuthenticationController {
     this.router.post("/register", this.userRegister);
 
     this.router.get("/logout", this.userLogout);
+    this.router.get("/verify:id");
 
     return this.router;
   };
@@ -73,7 +74,10 @@ export class AuthenticationController {
       "SELECT * FROM `userdetails` WHERE `email`=?",
       [email],
       async function (error: Error, results: any, fields: any) {
-        if (error) return res.redirect("/signuperr");
+        if (error) {
+          console.log("First query error");
+          return res.redirect("/signuperr");
+        }
 
         console.log(results);
 
@@ -87,6 +91,7 @@ export class AuthenticationController {
           //Hashing the password with 14 rounds of salting
           hash = await bcrypt.hash(password, 14);
         } catch (err) {
+          console.log("Hashing error");
           return res.redirect("/signuperr");
         }
 
@@ -96,24 +101,32 @@ export class AuthenticationController {
           "INSERT INTO `userdetails` (name, email, country, phone, password, active) VALUES (?,?,?,?,?,?)",
           [username, email, country, phone, hash, activeToken],
           async function (error: Error, results: any, fields: any) {
-            if (error) return res.redirect("/signuperr");
+            if (error) {
+              console.log("Insertion error");
+              console.log(error);
+              return res.redirect("/signuperr");
+            }
 
             let transporter = nodemailer.createTransport({
-              host: "smtp.ethereal.email",
+              host: "103.138.188.76",
               port: 587,
               secure: false, // true for 465, false for other ports
               auth: {
-                user: process.env.SMTPUSER, // generated ethereal user
-                pass: process.env.SMTPPASS, // generated ethereal password
+                user: process.env.SMTPUSER,
+                pass: process.env.SMTPPASS,
+              },
+              tls: {
+                rejectUnauthorized: false,
               },
             });
 
-            let info = await transporter.sendMail({
-              from: '"Fred Foo 👻" <foo@example.com>', // sender address
-              to: email, // list of receivers
-              subject: "Project CO Confirmation Mail", // Subject line
-              text: "Hello world?", // plain text body
-              html: `<p>Thanks for creating an account and starting a new journey with us.</p>
+            try {
+              let info = await transporter.sendMail({
+                from: "no-reply@covidopportunities.tech",
+                to: email, // list of receivers
+                subject: "Project CO Confirmation Mail", // Subject line
+                text: "Account Confirmation", // plain text body
+                html: `<p>Thanks for creating an account and starting a new journey with us.</p>
               <p
                   style="background-color: blue;color: white;text-align: center;width: fit-content;padding: 30px;display: block;margin: auto;">
                   Welcome to Covid Opportunities<br>
@@ -121,12 +134,17 @@ export class AuthenticationController {
                   ${email}<br>
                   Please click on the link to verify your email address.
               </p>
-              
+              <br>
               <b style="font-family: Roboto;">Hi ${username} ,</b>
-              <p>In order to use SoMee, you must confirm your email. Click the button below to
+              <p>In order to use the website, you must confirm your email. Click the link below to
                   confirm.</p>
-                  <a href="http://example.com/auth/verify/${activeToken}">http://example.com/auth/verify/${activeToken}</a>`, // html body
-            });
+                  <a href="http://covidopportunities.tech/auth/verify/${activeToken}">http://example.com/auth/verify/${activeToken}</a>`, // html body
+              });
+            } catch (err) {
+              console.log(err);
+              return res.sendStatus(500);
+            }
+            res.redirect("/signupres");
           }
         );
       }
@@ -136,5 +154,9 @@ export class AuthenticationController {
   userLogout = (req: Request, res: Response) => {
     res.clearCookie("token");
     res.status(200).send("User has been logged out");
+  };
+
+  userVerify = (req: Request, res: Response) => {
+    res.redirect("/login");
   };
 }

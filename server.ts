@@ -40,6 +40,9 @@ connection.connect(function (err: Error) {
 
   //Define Primary Routes
   app.get("/", (req: Request, res: Response) => {
+    res.sendFile(__dirname + "/pages/files/index.html");
+  });
+  app.get("/login", (req: Request, res: Response) => {
     res.sendFile(__dirname + "/pages/login/login.html");
   });
   app.get("/loginerr", (req: Request, res: Response) => {
@@ -50,6 +53,9 @@ connection.connect(function (err: Error) {
   });
   app.get("/signuperr", (req: Request, res: Response) => {
     res.sendFile(__dirname + "/pages/signup/signuperr.html");
+  });
+  app.get("/signupres", (req: Request, res: Response) => {
+    res.sendFile(__dirname + "/pages/response.html");
   });
   app.get("/register1", (req: Request, res: Response) => {
     res.sendFile(__dirname + "/pages/first.html");

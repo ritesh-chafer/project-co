@@ -49,6 +49,7 @@ var AuthenticationController = /** @class */ (function () {
             _this.router.post("/login", _this.userLogin);
             _this.router.post("/register", _this.userRegister);
             _this.router.get("/logout", _this.userLogout);
+            _this.router.get("/verify:id");
             return _this.router;
         };
         this.userLogin = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
@@ -63,6 +64,8 @@ var AuthenticationController = /** @class */ (function () {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
+                                    if (error)
+                                        return [2 /*return*/, res.redirect("/loginerr")];
                                     if (results.length == 0) {
                                         console.log("User was not found");
                                         return [2 /*return*/, res.redirect("/loginerr")];
@@ -104,12 +107,17 @@ var AuthenticationController = /** @class */ (function () {
                 country = req.body.country;
                 phone = req.body.phone;
                 password = req.body.password;
+                console.log(req.body);
                 server_1.connection.query("SELECT * FROM `userdetails` WHERE `email`=?", [email], function (error, results, fields) {
                     return __awaiter(this, void 0, void 0, function () {
                         var hash, err_2, activeToken;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
+                                    if (error) {
+                                        console.log("First query error");
+                                        return [2 /*return*/, res.redirect("/signuperr")];
+                                    }
                                     console.log(results);
                                     if (results.length != 0) {
                                         console.log("User email already exists");
@@ -125,36 +133,53 @@ var AuthenticationController = /** @class */ (function () {
                                     return [3 /*break*/, 4];
                                 case 3:
                                     err_2 = _a.sent();
+                                    console.log("Hashing error");
                                     return [2 /*return*/, res.redirect("/signuperr")];
                                 case 4:
                                     activeToken = Math.floor(Math.random() * 100000);
                                     //Adding new row to the table
                                     server_1.connection.query("INSERT INTO `userdetails` (name, email, country, phone, password, active) VALUES (?,?,?,?,?,?)", [username, email, country, phone, hash, activeToken], function (error, results, fields) {
                                         return __awaiter(this, void 0, void 0, function () {
-                                            var transporter, info;
+                                            var transporter, info, err_3;
                                             return __generator(this, function (_a) {
                                                 switch (_a.label) {
                                                     case 0:
-                                                        if (error)
+                                                        if (error) {
+                                                            console.log("Insertion error");
+                                                            console.log(error);
                                                             return [2 /*return*/, res.redirect("/signuperr")];
+                                                        }
                                                         transporter = nodemailer.createTransport({
-                                                            host: "smtp.ethereal.email",
+                                                            host: "103.138.188.76",
                                                             port: 587,
                                                             secure: false,
                                                             auth: {
                                                                 user: process.env.SMTPUSER,
                                                                 pass: process.env.SMTPPASS,
                                                             },
+                                                            tls: {
+                                                                rejectUnauthorized: false,
+                                                            },
                                                         });
+                                                        _a.label = 1;
+                                                    case 1:
+                                                        _a.trys.push([1, 3, , 4]);
                                                         return [4 /*yield*/, transporter.sendMail({
-                                                                from: '"Fred Foo 👻" <foo@example.com>',
+                                                                from: "no-reply@covidopportunities.tech",
                                                                 to: email,
                                                                 subject: "Project CO Confirmation Mail",
-                                                                text: "Hello world?",
-                                                                html: "<p>Thanks for creating an account and starting a new journey with us.</p>\n              <p\n                  style=\"background-color: blue;color: white;text-align: center;width: fit-content;padding: 30px;display: block;margin: auto;\">\n                  Welcome to Covid Opportunities<br>\n                  " + username + "<br>\n                  " + email + "<br>\n                  Please click on the link to verify your email address.\n              </p>\n              \n              <b style=\"font-family: Roboto;\">Hi " + username + " ,</b>\n              <p>In order to use SoMee, you must confirm your email. Click the button below to\n                  confirm.</p>\n                  <a href=\"http://example.com/auth/verify/" + activeToken + "\">http://example.com/auth/verify/" + activeToken + "</a>",
+                                                                text: "Account Confirmation",
+                                                                html: "<p>Thanks for creating an account and starting a new journey with us.</p>\n              <p\n                  style=\"background-color: blue;color: white;text-align: center;width: fit-content;padding: 30px;display: block;margin: auto;\">\n                  Welcome to Covid Opportunities<br>\n                  " + username + "<br>\n                  " + email + "<br>\n                  Please click on the link to verify your email address.\n              </p>\n              <br>\n              <b style=\"font-family: Roboto;\">Hi " + username + " ,</b>\n              <p>In order to use the website, you must confirm your email. Click the link below to\n                  confirm.</p>\n                  <a href=\"http://covidopportunities.tech/auth/verify/" + activeToken + "\">http://example.com/auth/verify/" + activeToken + "</a>",
                                                             })];
-                                                    case 1:
+                                                    case 2:
                                                         info = _a.sent();
+                                                        return [3 /*break*/, 4];
+                                                    case 3:
+                                                        err_3 = _a.sent();
+                                                        console.log(err_3);
+                                                        return [2 /*return*/, res.sendStatus(500)];
+                                                    case 4:
+                                                        res.redirect("/signupres");
                                                         return [2 /*return*/];
                                                 }
                                             });
@@ -171,6 +196,9 @@ var AuthenticationController = /** @class */ (function () {
         this.userLogout = function (req, res) {
             res.clearCookie("token");
             res.status(200).send("User has been logged out");
+        };
+        this.userVerify = function (req, res) {
+            res.redirect("/login");
         };
     }
     return AuthenticationController;
