@@ -38,13 +38,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
+var nodemailer = require("nodemailer");
 var express_1 = require("express");
 var server_1 = require("../../server");
 var AuthenticationController = /** @class */ (function () {
     function AuthenticationController() {
         var _this = this;
         this.router = express_1.Router();
-        this.collection = server_1.client.db("projectCO").collection("userDetails");
         this.register = function () {
             _this.router.post("/login", _this.userLogin);
             _this.router.post("/register", _this.userRegister);
@@ -52,94 +52,124 @@ var AuthenticationController = /** @class */ (function () {
             return _this.router;
         };
         this.userLogin = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var email, password, userQuery, compareResponse, token, err_1;
+            var email, password;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        email = req.body.email;
-                        password = req.body.password;
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 5, , 6]);
-                        return [4 /*yield*/, this.collection.findOne({ email: email })];
-                    case 2:
-                        userQuery = _a.sent();
-                        if (userQuery == null) {
-                            console.log("User was not found");
-                            return [2 /*return*/, res.status(401).json({ error: "User not found in database" })];
-                        }
-                        return [4 /*yield*/, bcrypt.compare(password, userQuery["password"])];
-                    case 3:
-                        compareResponse = _a.sent();
-                        if (!compareResponse) {
-                            console.log("Invalid credentials");
-                            return [2 /*return*/, res.status(401).json({ error: "Invalid credentials" })];
-                        }
-                        return [4 /*yield*/, jwt.sign({
-                                expiresIn: "1h",
-                            }, process.env.SECRET)];
-                    case 4:
-                        token = _a.sent();
-                        res
-                            .cookie("token", token, { httpOnly: true })
-                            .status(200)
-                            .send("User logged in and token stored as a cookie.");
-                        return [3 /*break*/, 6];
-                    case 5:
-                        err_1 = _a.sent();
-                        console.log(err_1);
-                        res.status(500).json({
-                            error: "Server faced some unexpected error. Check the log for more details.",
+                email = req.body.email;
+                password = req.body.password;
+                server_1.connection.query;
+                server_1.connection.query("SELECT * FROM `userdetails` WHERE email=? LIMIT 1", [email], function (error, results, fields) {
+                    return __awaiter(this, void 0, void 0, function () {
+                        var compareResponse, token, err_1;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    if (results.length == 0) {
+                                        console.log("User was not found");
+                                        return [2 /*return*/, res.status(401).json({ error: "User not found in database" })];
+                                    }
+                                    return [4 /*yield*/, bcrypt.compare(password, results[0].password)];
+                                case 1:
+                                    compareResponse = _a.sent();
+                                    if (!compareResponse) {
+                                        console.log("Invalid credentials");
+                                        return [2 /*return*/, res.status(401).json({ error: "Invalid credentials" })];
+                                    }
+                                    _a.label = 2;
+                                case 2:
+                                    _a.trys.push([2, 4, , 5]);
+                                    return [4 /*yield*/, jwt.sign({
+                                            expiresIn: "1h",
+                                        }, process.env.SECRET)];
+                                case 3:
+                                    token = _a.sent();
+                                    return [3 /*break*/, 5];
+                                case 4:
+                                    err_1 = _a.sent();
+                                    res.status(500).json({ error: "Internal Server Error" });
+                                    return [3 /*break*/, 5];
+                                case 5:
+                                    res
+                                        .cookie("token", token, { httpOnly: true })
+                                        .status(200)
+                                        .json({ success: "User logged in and token stored as a cookie." });
+                                    return [2 /*return*/];
+                            }
                         });
-                        return [3 /*break*/, 6];
-                    case 6: return [2 /*return*/];
-                }
+                    });
+                });
+                return [2 /*return*/];
             });
         }); };
         this.userRegister = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var username, email, country, phone, password, emailQuery, hash, insertResponse, err_2;
+            var username, email, country, phone, password;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        console.log(req.body);
-                        username = req.body.username;
-                        email = req.body.email;
-                        country = req.body.country;
-                        phone = req.body.phone;
-                        password = req.body.password;
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 5, , 6]);
-                        return [4 /*yield*/, this.collection.find({ email: email }).toArray()];
-                    case 2:
-                        emailQuery = _a.sent();
-                        if (emailQuery.length != 0) {
-                            console.log("User email already exists");
-                            return [2 /*return*/, res.status(409).json({ error: "User email already exists" })];
-                        }
-                        return [4 /*yield*/, bcrypt.hash(password, 14)];
-                    case 3:
-                        hash = _a.sent();
-                        return [4 /*yield*/, this.collection.insertOne({
-                                username: username,
-                                email: email,
-                                country: country,
-                                phone: phone,
-                                password: hash,
-                            })];
-                    case 4:
-                        insertResponse = _a.sent();
-                        res.status(200).send("User registered successfully");
-                        return [3 /*break*/, 6];
-                    case 5:
-                        err_2 = _a.sent();
-                        console.log(err_2);
-                        res.status(500).json({
-                            error: "Server faced some unexpected error. Check the log for more details.",
+                username = req.body.name;
+                email = req.body.email;
+                country = req.body.country;
+                phone = req.body.phone;
+                password = req.body.password;
+                server_1.connection.query("SELECT * FROM `userdetails` WHERE `email`=?", [email], function (error, results, fields) {
+                    return __awaiter(this, void 0, void 0, function () {
+                        var hash, err_2, activeToken;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    console.log(results);
+                                    if (results.length != 0) {
+                                        console.log("User email already exists");
+                                        return [2 /*return*/, res.status(409).json({ error: "User email already exists" })];
+                                    }
+                                    _a.label = 1;
+                                case 1:
+                                    _a.trys.push([1, 3, , 4]);
+                                    return [4 /*yield*/, bcrypt.hash(password, 14)];
+                                case 2:
+                                    //Hashing the password with 14 rounds of salting
+                                    hash = _a.sent();
+                                    return [3 /*break*/, 4];
+                                case 3:
+                                    err_2 = _a.sent();
+                                    return [2 /*return*/, res.status(500).json({ error: "Internal Server Error" })];
+                                case 4:
+                                    activeToken = Math.floor(Math.random() * 100000);
+                                    //Adding new row to the table
+                                    server_1.connection.query("INSERT INTO `userdetails` (name, email, country, phone, password, active) VALUES (?,?,?,?,?,?)", [username, email, country, phone, hash, activeToken], function (error, results, fields) {
+                                        return __awaiter(this, void 0, void 0, function () {
+                                            var transporter, info;
+                                            return __generator(this, function (_a) {
+                                                switch (_a.label) {
+                                                    case 0:
+                                                        if (error)
+                                                            return [2 /*return*/, res.status(500).json({ error: "Database query issue" })];
+                                                        transporter = nodemailer.createTransport({
+                                                            host: "smtp.ethereal.email",
+                                                            port: 587,
+                                                            secure: false,
+                                                            auth: {
+                                                                user: process.env.SMTPUSER,
+                                                                pass: process.env.SMTPPASS,
+                                                            },
+                                                        });
+                                                        return [4 /*yield*/, transporter.sendMail({
+                                                                from: '"Fred Foo 👻" <foo@example.com>',
+                                                                to: email,
+                                                                subject: "Project CO Confirmation Mail",
+                                                                text: "Hello world?",
+                                                                html: "<p>Thanks for creating an account and starting a new journey with us.</p>\n              <p\n                  style=\"background-color: blue;color: white;text-align: center;width: fit-content;padding: 30px;display: block;margin: auto;\">\n                  Welcome to Covid Opportunities<br>\n                  " + username + "<br>\n                  " + email + "<br>\n                  Please click on the link to verify your email address.\n              </p>\n              \n              <b style=\"font-family: Roboto;\">Hi " + username + " ,</b>\n              <p>In order to use SoMee, you must confirm your email. Click the button below to\n                  confirm.</p>\n                  <a href=\"http://example.com/auth/verify/" + activeToken + "\">http://example.com/auth/verify/" + activeToken + "</a>",
+                                                            })];
+                                                    case 1:
+                                                        info = _a.sent();
+                                                        return [2 /*return*/];
+                                                }
+                                            });
+                                        });
+                                    });
+                                    return [2 /*return*/];
+                            }
                         });
-                        return [3 /*break*/, 6];
-                    case 6: return [2 /*return*/];
-                }
+                    });
+                });
+                return [2 /*return*/];
             });
         }); };
         this.userLogout = function (req, res) {
