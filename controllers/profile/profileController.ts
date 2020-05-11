@@ -5,6 +5,7 @@ export class ProfileController {
   router: Router = Router();
 
   register = (): Router => {
+    this.router.post("first", this.processFirst);
     this.router.post("/second", this.processSecond);
     return this.router;
   };
