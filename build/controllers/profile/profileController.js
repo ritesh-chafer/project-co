@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
+var server_1 = require("../../server");
 var ProfileController = /** @class */ (function () {
     function ProfileController() {
         var _this = this;
@@ -16,6 +17,31 @@ var ProfileController = /** @class */ (function () {
             var mobile = req.body.mobile;
             var city = req.body.city;
             var country = req.body.country;
+            var college = req.body.college;
+            var degree = req.body.degree;
+            var major = req.body.major;
+            var sDate = req.body.sdate;
+            var eDate = req.body.edate;
+            server_1.connection.query("INSERT INTO `userprofile` (fname, lname, email, mobile, city, country, college, degree, major, sdate, edate) VALUES (?,?,?,?,?,?,?,?,?,?,?)", [
+                firstName,
+                lastName,
+                email,
+                mobile,
+                city,
+                country,
+                college,
+                degree,
+                major,
+                sDate,
+                eDate,
+            ], function (error, results, fields) {
+                if (error) {
+                    console.log(error);
+                    alert("There was some error while processing your data. Please retry.");
+                    res.redirect("/register1");
+                }
+                res.redirect("/register2?email=" + email);
+            });
         };
         this.processSecond = function (req, res) {
             console.log(req.body);

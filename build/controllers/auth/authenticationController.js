@@ -49,7 +49,7 @@ var AuthenticationController = /** @class */ (function () {
             _this.router.post("/login", _this.userLogin);
             _this.router.post("/register", _this.userRegister);
             _this.router.get("/logout", _this.userLogout);
-            _this.router.get("/verify:id");
+            _this.router.get("/verify/*", _this.userVerify);
             return _this.router;
         };
         this.userLogin = function (req, res) { return __awaiter(_this, void 0, void 0, function () {

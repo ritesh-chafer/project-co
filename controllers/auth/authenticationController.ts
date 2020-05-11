@@ -13,7 +13,7 @@ export class AuthenticationController {
     this.router.post("/register", this.userRegister);
 
     this.router.get("/logout", this.userLogout);
-    this.router.get("/verify:id");
+    this.router.get("/verify/*", this.userVerify);
 
     return this.router;
   };
