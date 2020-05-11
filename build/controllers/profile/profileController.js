@@ -7,7 +7,7 @@ var ProfileController = /** @class */ (function () {
         var _this = this;
         this.router = express_1.Router();
         this.register = function () {
-            _this.router.post("first", _this.processFirst);
+            _this.router.post("/first", _this.processFirst);
             _this.router.post("/second", _this.processSecond);
             return _this.router;
         };
