@@ -26,6 +26,8 @@ export class AuthenticationController {
       "SELECT * FROM `userdetails` WHERE email=? LIMIT 1",
       [email],
       async function (error: Error, results: any, fields: any) {
+        if (error) return res.redirect("/loginerr");
+
         if (results.length == 0) {
           console.log("User was not found");
           return res.redirect("/loginerr");
@@ -69,6 +71,8 @@ export class AuthenticationController {
       "SELECT * FROM `userdetails` WHERE `email`=?",
       [email],
       async function (error: Error, results: any, fields: any) {
+        if (error) return res.redirect("/signuperr");
+
         if (results.length != 0) {
           console.log("User email already exists");
           return res.redirect("/signuperr");
