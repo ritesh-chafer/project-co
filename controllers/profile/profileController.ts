@@ -1,5 +1,7 @@
 import { Request, Response, Router } from "express";
 import { connection } from "../../server";
+import { monitorEventLoopDelay } from "perf_hooks";
+import { link } from "fs";
 
 export class ProfileController {
   router: Router = Router();
@@ -24,7 +26,7 @@ export class ProfileController {
     let eDate = req.body.edate;
 
     connection.query(
-      "INSERT INTO `userprofile` (fname, lname, email, mobile, city, country, college, degree, major, sdate, edate) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+      "INSERT INTO `userprofile` (fname, lname, email, mobile, city, country, college, degree, major, sdate, edate, options, linkedin, github) VALUES (?,?,?,?,?,?,?,?,?,?,?, NULL, NULL, NULL)",
       [
         firstName,
         lastName,
@@ -52,7 +54,28 @@ export class ProfileController {
   };
 
   processSecond = (req: Request, res: Response) => {
-    console.log(req.body);
-    res.sendStatus(200);
+    let ops = "";
+    if (Array.isArray(req.body.options)) {
+      req.body.options.forEach((element: string) => {
+        ops = element + "," + ops;
+      });
+    } else {
+      ops = req.body.options;
+    }
+    let linkedin = req.body.linkedin;
+    let github = req.body.github;
+    let email = req.body.emailValue;
+    connection.query(
+      "UPDATE `userprofile` SET options=?, linkedin=?, github=? WHERE email=?",
+      [ops, linkedin, github, email],
+      (error: Error, results: any, fields: any) => {
+        if (error) {
+          console.log(error);
+          alert("You data could not be saved. Please try again");
+          return res.redirect("/register2?email=" + email);
+        }
+        res.sendStatus(200);
+      }
+    );
   };
 }

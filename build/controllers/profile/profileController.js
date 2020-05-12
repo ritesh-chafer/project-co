@@ -23,7 +23,7 @@ var ProfileController = /** @class */ (function () {
             var major = req.body.major;
             var sDate = req.body.sdate;
             var eDate = req.body.edate;
-            server_1.connection.query("INSERT INTO `userprofile` (fname, lname, email, mobile, city, country, college, degree, major, sdate, edate) VALUES (?,?,?,?,?,?,?,?,?,?,?)", [
+            server_1.connection.query("INSERT INTO `userprofile` (fname, lname, email, mobile, city, country, college, degree, major, sdate, edate, options, linkedin, github) VALUES (?,?,?,?,?,?,?,?,?,?,?, NULL, NULL, NULL)", [
                 firstName,
                 lastName,
                 email,
@@ -45,8 +45,26 @@ var ProfileController = /** @class */ (function () {
             });
         };
         this.processSecond = function (req, res) {
-            console.log(req.body);
-            res.sendStatus(200);
+            var ops = "";
+            if (Array.isArray(req.body.options)) {
+                req.body.options.forEach(function (element) {
+                    ops = element + "," + ops;
+                });
+            }
+            else {
+                ops = req.body.options;
+            }
+            var linkedin = req.body.linkedin;
+            var github = req.body.github;
+            var email = req.body.emailValue;
+            server_1.connection.query("UPDATE `userprofile` SET options=?, linkedin=?, github=? WHERE email=?", [ops, linkedin, github, email], function (error, results, fields) {
+                if (error) {
+                    console.log(error);
+                    alert("You data could not be saved. Please try again");
+                    return res.redirect("/register2?email=" + email);
+                }
+                res.sendStatus(200);
+            });
         };
     }
     return ProfileController;
