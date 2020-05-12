@@ -48,7 +48,7 @@ var ProfileController = /** @class */ (function () {
             var ops = "";
             if (Array.isArray(req.body.options)) {
                 req.body.options.forEach(function (element) {
-                    ops = element + "," + ops;
+                    ops = element + ", " + ops;
                 });
             }
             else {

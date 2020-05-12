@@ -57,7 +57,7 @@ export class ProfileController {
     let ops = "";
     if (Array.isArray(req.body.options)) {
       req.body.options.forEach((element: string) => {
-        ops = element + "," + ops;
+        ops = element + ", " + ops;
       });
     } else {
       ops = req.body.options;

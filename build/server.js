@@ -55,6 +55,9 @@ exports.connection.connect(function (err) {
     app.get("/register2", function (req, res) {
         res.sendFile(__dirname + "/pages/second.html");
     });
+    app.get("/finish", function (req, res) {
+        res.sendFile(__dirname + "/pages/complete.html");
+    });
     app.get("/secret", middlewareInstance.authentication, function (req, res) {
         res.send("This secret content can be viewed only after logging in.");
     });

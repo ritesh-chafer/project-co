@@ -63,6 +63,9 @@ connection.connect(function (err: Error) {
   app.get("/register2", (req: Request, res: Response) => {
     res.sendFile(__dirname + "/pages/second.html");
   });
+  app.get("/finish", (req: Request, res: Response) => {
+    res.sendFile(__dirname + "/pages/complete.html");
+  });
   app.get(
     "/secret",
     middlewareInstance.authentication,
