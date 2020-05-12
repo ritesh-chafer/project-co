@@ -74,7 +74,7 @@ export class ProfileController {
           alert("You data could not be saved. Please try again");
           return res.redirect("/register2?email=" + email);
         }
-        res.sendStatus(200);
+        res.redirect("/finish");
       }
     );
   };
